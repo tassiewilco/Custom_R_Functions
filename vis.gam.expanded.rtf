@@ -1,0 +1,278 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red6\green0\blue135;\red181\green118\blue12;\red11\green66\blue19;
+\red158\green0\blue3;}
+\paperw12240\paperh15840\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 vis.gam.expanded \cf2 <-\cf0  \cf3 function\cf0  \cf2 (\cf0 x\cf2 ,\cf0  view \cf2 =\cf0  \cf3 NULL\cf2 ,\cf0  cond \cf2 =\cf0  \cf2 list(),\cf0  n.grid \cf2 =\cf0  \cf4 30\cf2 ,\cf0  too.far \cf2 =\cf0  \cf4 0\cf2 ,\cf0  \
+                      col \cf2 =\cf0  \cf3 NA\cf2 ,\cf0  color \cf2 =\cf0  \cf5 "heat"\cf2 ,\cf0  contour.col \cf2 =\cf0  \cf3 NULL\cf2 ,\cf0  se \cf2 =\cf0  \cf4 -1\cf2 ,\cf0  type \cf2 =\cf0  \cf5 "link"\cf2 ,\cf0  \
+                      plot.type \cf2 =\cf0  \cf5 "persp"\cf2 ,\cf0  zlim \cf2 =\cf0  \cf3 NULL\cf2 ,\cf0  nCol \cf2 =\cf0  \cf4 50\cf2 ,\cf0  legend = TRUE, legend.loc = "topleft", Bounded = F, BoundingPoly = NA,...\cf2 )\cf0  \
+\cf2 \{\
+#This has been expanded to allow a legend, and then later expanded to all a polygon bound\cf0 \
+  fac.seq \cf2 <-\cf0  \cf3 function\cf2 (\cf0 fac\cf2 ,\cf0  n.grid\cf2 )\cf0  \cf2 \{\cf0 \
+    fn \cf2 <-\cf0  \cf2 length(levels(\cf0 fac\cf2 ))\cf0 \
+    gn \cf2 <-\cf0  n.grid\
+    \cf3 if\cf0  \cf2 (\cf0 fn \cf2 >\cf0  gn\cf2 )\cf0  \
+      mf \cf2 <-\cf0  \cf2 factor(levels(\cf0 fac\cf2 ))[\cf4 1\cf2 :\cf0 gn\cf2 ]\cf0 \
+    \cf3 else\cf0  \cf2 \{\cf0 \
+      ln \cf2 <-\cf0  \cf2 floor(\cf0 gn\cf2 /\cf0 fn\cf2 )\cf0 \
+      mf \cf2 <-\cf0  \cf2 rep(levels(\cf0 fac\cf2 )[\cf0 fn\cf2 ],\cf0  gn\cf2 )\cf0 \
+      mf\cf2 [\cf4 1\cf2 :(\cf0 ln \cf2 *\cf0  fn\cf2 )]\cf0  \cf2 <-\cf0  \cf2 rep(levels(\cf0 fac\cf2 ),\cf0  \cf2 rep(\cf0 ln\cf2 ,\cf0  fn\cf2 ))\cf0 \
+      mf \cf2 <-\cf0  \cf2 factor(\cf0 mf\cf2 ,\cf0  levels \cf2 =\cf0  \cf2 levels(\cf0 fac\cf2 ))\cf0 \
+    \cf2 \}\cf0 \
+    mf\
+  \cf2 \}\cf0 \
+  dnm \cf2 <-\cf0  \cf2 names(list(\cf0 ...\cf2 ))\cf0 \
+  v.names \cf2 <-\cf0  \cf2 names(\cf0 x\cf2 $\cf0 var.summary\cf2 )\cf0 \
+  \cf3 if\cf0  \cf2 (is.null(\cf0 view\cf2 ))\cf0  \cf2 \{\cf0 \
+    k \cf2 <-\cf0  \cf4 0\cf0 \
+    view \cf2 <-\cf0  \cf2 rep(\cf5 ""\cf2 ,\cf0  \cf4 2\cf2 )\cf0 \
+    \cf3 for\cf0  \cf2 (\cf0 i \cf3 in\cf0  \cf4 1\cf2 :length(\cf0 v.names\cf2 ))\cf0  \cf2 \{\cf0 \
+      ok \cf2 <-\cf0  \cf3 TRUE\cf0 \
+      \cf3 if\cf0  \cf2 (is.matrix(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 i\cf2 ]]))\cf0  \
+        ok \cf2 <-\cf0  \cf3 FALSE\cf0 \
+      \cf3 else\cf0  \cf3 if\cf0  \cf2 (is.factor(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 i\cf2 ]]))\cf0  \cf2 \{\cf0 \
+        \cf3 if\cf0  \cf2 (length(levels(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 i\cf2 ]]))\cf0  \cf2 <=\cf0  \cf4 1\cf2 )\cf0  \
+          ok \cf2 <-\cf0  \cf3 FALSE\cf0 \
+      \cf2 \}\cf0 \
+      \cf3 else\cf0  \cf2 \{\cf0 \
+        \cf3 if\cf0  \cf2 (length(unique(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 i\cf2 ]]))\cf0  \cf2 ==\cf0  \cf4 1\cf2 )\cf0  \
+          ok \cf2 <-\cf0  \cf3 FALSE\cf0 \
+      \cf2 \}\cf0 \
+      \cf3 if\cf0  \cf2 (\cf0 ok\cf2 )\cf0  \cf2 \{\cf0 \
+        k \cf2 <-\cf0  k \cf2 +\cf0  \cf4 1\cf0 \
+        view\cf2 [\cf0 k\cf2 ]\cf0  \cf2 <-\cf0  v.names\cf2 [\cf0 i\cf2 ]\cf0 \
+      \cf2 \}\cf0 \
+      \cf3 if\cf0  \cf2 (\cf0 k \cf2 ==\cf0  \cf4 2\cf2 )\cf0  \
+        \cf3 break\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 if\cf0  \cf2 (\cf0 k \cf2 <\cf0  \cf4 2\cf2 )\cf0  \
+      \cf2 stop(\cf5 "Model does not seem to have enough terms to do anything useful"\cf2 )\cf0 \
+  \cf2 \}\cf0 \
+  \cf3 else\cf0  \cf2 \{\cf0 \
+    \cf3 if\cf0  \cf2 (sum(\cf0 view \cf2 %\cf3 in\cf2 %\cf0  v.names\cf2 )\cf0  \cf2 !=\cf0  \cf4 2\cf2 )\cf0  \
+      \cf2 stop(gettextf(\cf5 "view variables must be one of %s"\cf2 ,\cf0  \
+                    \cf2 paste(\cf0 v.names\cf2 ,\cf0  collapse \cf2 =\cf0  \cf5 ", "\cf2 )))\cf0 \
+    \cf3 for\cf0  \cf2 (\cf0 i \cf3 in\cf0  \cf4 1\cf2 :\cf4 2\cf2 )\cf0  \cf3 if\cf0  \cf2 (!inherits(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 view\cf2 [\cf0 i\cf2 ]]],\cf0  \
+                                 \cf2 c(\cf5 "numeric"\cf2 ,\cf0  \cf5 "factor"\cf2 )))\cf0  \
+      \cf2 stop(\cf5 "Don't know what to do with parametric terms that are not simple numeric or factor variables"\cf2 )\cf0 \
+  \cf2 \}\cf0 \
+  ok \cf2 <-\cf0  \cf3 TRUE\cf0 \
+  \cf3 for\cf0  \cf2 (\cf0 i \cf3 in\cf0  \cf4 1\cf2 :\cf4 2\cf2 )\cf0  \cf3 if\cf0  \cf2 (is.factor(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 view\cf2 [\cf0 i\cf2 ]]]))\cf0  \cf2 \{\cf0 \
+    \cf3 if\cf0  \cf2 (length(levels(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 view\cf2 [\cf0 i\cf2 ]]]))\cf0  \cf2 <=\cf0  \cf4 1\cf2 )\cf0  \
+      ok \cf2 <-\cf0  \cf3 FALSE\cf0 \
+  \cf2 \}\cf0 \
+  \cf3 else\cf0  \cf2 \{\cf0 \
+    \cf3 if\cf0  \cf2 (length(unique(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 view\cf2 [\cf0 i\cf2 ]]]))\cf0  \cf2 <=\cf0  \cf4 1\cf2 )\cf0  \
+      ok \cf2 <-\cf0  \cf3 FALSE\cf0 \
+  \cf2 \}\cf0 \
+  \cf3 if\cf0  \cf2 (!\cf0 ok\cf2 )\cf0  \
+    \cf2 stop(gettextf(\cf5 "View variables must contain more than one value. view = c(%s,%s)."\cf2 ,\cf0  \
+                  view\cf2 [\cf4 1\cf2 ],\cf0  view\cf2 [\cf4 2\cf2 ]))\cf0 \
+  \cf3 if\cf0  \cf2 (is.factor(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 view\cf2 [\cf4 1\cf2 ]]]))\cf0  \
+    m1 \cf2 <-\cf0  \cf2 fac.seq(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 view\cf2 [\cf4 1\cf2 ]]],\cf0  n.grid\cf2 )\cf0 \
+  \cf3 else\cf0  \cf2 \{\cf0 \
+    r1 \cf2 <-\cf0  \cf2 range(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 view\cf2 [\cf4 1\cf2 ]]])\cf0 \
+    m1 \cf2 <-\cf0  \cf2 seq(\cf0 r1\cf2 [\cf4 1\cf2 ],\cf0  r1\cf2 [\cf4 2\cf2 ],\cf0  length \cf2 =\cf0  n.grid\cf2 )\cf0 \
+  \cf2 \}\cf0 \
+  \cf3 if\cf0  \cf2 (is.factor(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 view\cf2 [\cf4 2\cf2 ]]]))\cf0  \
+    m2 \cf2 <-\cf0  \cf2 fac.seq(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 view\cf2 [\cf4 2\cf2 ]]],\cf0  n.grid\cf2 )\cf0 \
+  \cf3 else\cf0  \cf2 \{\cf0 \
+    r2 \cf2 <-\cf0  \cf2 range(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 view\cf2 [\cf4 2\cf2 ]]])\cf0 \
+    m2 \cf2 <-\cf0  \cf2 seq(\cf0 r2\cf2 [\cf4 1\cf2 ],\cf0  r2\cf2 [\cf4 2\cf2 ],\cf0  length \cf2 =\cf0  n.grid\cf2 )\cf0 \
+  \cf2 \}\cf0 \
+  v1 \cf2 <-\cf0  \cf2 rep(\cf0 m1\cf2 ,\cf0  n.grid\cf2 )\cf0 \
+  v2 \cf2 <-\cf0  \cf2 rep(\cf0 m2\cf2 ,\cf0  \cf2 rep(\cf0 n.grid\cf2 ,\cf0  n.grid\cf2 ))\cf0 \
+  newd \cf2 <-\cf0  \cf2 data.frame(matrix(\cf4 0\cf2 ,\cf0  n.grid \cf2 *\cf0  n.grid\cf2 ,\cf0  \cf4 0\cf2 ))\cf0 \
+  \cf3 for\cf0  \cf2 (\cf0 i \cf3 in\cf0  \cf4 1\cf2 :length(\cf0 x\cf2 $\cf0 var.summary\cf2 ))\cf0  \cf2 \{\cf0 \
+    ma \cf2 <-\cf0  cond\cf2 [[\cf0 v.names\cf2 [\cf0 i\cf2 ]]]\cf0 \
+    \cf3 if\cf0  \cf2 (is.null(\cf0 ma\cf2 ))\cf0  \cf2 \{\cf0 \
+      ma \cf2 <-\cf0  x\cf2 $\cf0 var.summary\cf2 [[\cf0 i\cf2 ]]\cf0 \
+      \cf3 if\cf0  \cf2 (is.numeric(\cf0 ma\cf2 ))\cf0  \
+        ma \cf2 <-\cf0  ma\cf2 [\cf4 2\cf2 ]\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 if\cf0  \cf2 (is.matrix(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 i\cf2 ]]))\cf0  \
+      newd\cf2 [[\cf0 i\cf2 ]]\cf0  \cf2 <-\cf0  \cf2 matrix(\cf0 ma\cf2 ,\cf0  n.grid \cf2 *\cf0  n.grid\cf2 ,\cf0  \cf2 ncol(\cf0 x\cf2 $\cf0 var.summary\cf2 [[\cf0 i\cf2 ]]),\cf0  \
+                          byrow \cf2 =\cf0  \cf3 TRUE\cf2 )\cf0 \
+    \cf3 else\cf0  newd\cf2 [[\cf0 i\cf2 ]]\cf0  \cf2 <-\cf0  \cf2 rep(\cf0 ma\cf2 ,\cf0  n.grid \cf2 *\cf0  n.grid\cf2 )\cf0 \
+  \cf2 \}\cf0 \
+  \cf2 names(\cf0 newd\cf2 )\cf0  \cf2 <-\cf0  v.names\
+  newd\cf2 [[\cf0 view\cf2 [\cf4 1\cf2 ]]]\cf0  \cf2 <-\cf0  v1\
+  newd\cf2 [[\cf0 view\cf2 [\cf4 2\cf2 ]]]\cf0  \cf2 <-\cf0  v2\
+  \cf3 if\cf0  \cf2 (\cf0 type \cf2 ==\cf0  \cf5 "link"\cf2 )\cf0  \
+    zlab \cf2 <-\cf0  \cf2 paste(\cf5 "linear predictor"\cf2 )\cf0 \
+  \cf3 else\cf0  \cf3 if\cf0  \cf2 (\cf0 type \cf2 ==\cf0  \cf5 "response"\cf2 )\cf0  \
+    zlab \cf2 <-\cf0  type\
+  \cf3 else\cf0  \cf2 stop(\cf5 "type must be \\"link\\" or \\"response\\""\cf2 )\cf0 \
+  fv \cf2 <-\cf0  \cf2 predict.gam(\cf0 x\cf2 ,\cf0  newdata \cf2 =\cf0  newd\cf2 ,\cf0  se.fit \cf2 =\cf0  \cf3 TRUE\cf2 ,\cf0  type \cf2 =\cf0  type\cf2 )\cf0 \
+  z \cf2 <-\cf0  fv\cf2 $\cf0 fit\
+  \cf3 if\cf0  \cf2 (\cf0 too.far \cf2 >\cf0  \cf4 0 & !Bounded\cf2 )\cf0  \cf2 \{\cf0 \
+    ex.tf \cf2 <-\cf0  \cf2 exclude.too.far(\cf0 v1\cf2 ,\cf0  v2\cf2 ,\cf0  x\cf2 $\cf0 model\cf2 [,\cf0  view\cf2 [\cf4 1\cf2 ]],\cf0  \
+                             x\cf2 $\cf0 model\cf2 [,\cf0  view\cf2 [\cf4 2\cf2 ]],\cf0  dist \cf2 =\cf0  too.far\cf2 )\cf0 \
+    fv\cf2 $\cf0 se.fit\cf2 [\cf0 ex.tf\cf2 ]\cf0  \cf2 <-\cf0  fv\cf2 $\cf0 fit\cf2 [\cf0 ex.tf\cf2 ]\cf0  \cf2 <-\cf0  \cf3 NA\cf0 \
+  \cf2 \} else if \{\
+\cf0     ex.tf \cf2 <-\cf0  \cf2 exclude.too.far.bounded(\cf0 v1\cf2 ,\cf0  v2\cf2 ,\cf0  x\cf2 $\cf0 model\cf2 [,\cf0  view\cf2 [\cf4 1\cf2 ]],\cf0  \
+                             x\cf2 $\cf0 model\cf2 [,\cf0  view\cf2 [\cf4 2\cf2 ]],\cf0  dist \cf2 =\cf0  too.far, Poly\cf2 )\cf0 \
+    fv\cf2 $\cf0 se.fit\cf2 [\cf0 ex.tf\cf2 ]\cf0  \cf2 <-\cf0  fv\cf2 $\cf0 fit\cf2 [\cf0 ex.tf\cf2 ]\cf0  \cf2 <-\cf0  \cf3 NA\cf2 \
+\
+\}\cf0 \
+  \cf3 if\cf0  \cf2 (is.factor(\cf0 m1\cf2 ))\cf0  \cf2 \{\cf0 \
+    m1 \cf2 <-\cf0  \cf2 as.numeric(\cf0 m1\cf2 )\cf0 \
+    m1 \cf2 <-\cf0  \cf2 seq(min(\cf0 m1\cf2 )\cf0  \cf2 -\cf0  \cf4 0.5\cf2 ,\cf0  \cf2 max(\cf0 m1\cf2 )\cf0  \cf2 +\cf0  \cf4 0.5\cf2 ,\cf0  length \cf2 =\cf0  n.grid\cf2 )\cf0 \
+  \cf2 \}\cf0 \
+  \cf3 if\cf0  \cf2 (is.factor(\cf0 m2\cf2 ))\cf0  \cf2 \{\cf0 \
+    m2 \cf2 <-\cf0  \cf2 as.numeric(\cf0 m2\cf2 )\cf0 \
+    m2 \cf2 <-\cf0  \cf2 seq(min(\cf0 m1\cf2 )\cf0  \cf2 -\cf0  \cf4 0.5\cf2 ,\cf0  \cf2 max(\cf0 m2\cf2 )\cf0  \cf2 +\cf0  \cf4 0.5\cf2 ,\cf0  length \cf2 =\cf0  n.grid\cf2 )\cf0 \
+  \cf2 \}\cf0 \
+  \cf3 if\cf0  \cf2 (\cf0 se \cf2 <=\cf0  \cf4 0\cf2 )\cf0  \cf2 \{\cf0 \
+    old.warn \cf2 <-\cf0  \cf2 options(\cf0 warn \cf2 =\cf0  \cf4 -1\cf2 )\cf0 \
+    av \cf2 <-\cf0  \cf2 matrix(c(\cf4 0.5\cf2 ,\cf0  \cf4 0.5\cf2 ,\cf0  \cf2 rep(\cf4 0\cf2 ,\cf0  n.grid \cf2 -\cf0  \cf4 1\cf2 )),\cf0  n.grid\cf2 ,\cf0  \
+                 n.grid \cf2 -\cf0  \cf4 1\cf2 )\cf0 \
+    \cf2 options(\cf0 old.warn\cf2 )\cf0 \
+    max.z \cf2 <-\cf0  \cf2 max(\cf0 z\cf2 ,\cf0  na.rm \cf2 =\cf0  \cf3 TRUE\cf2 )\cf0 \
+    z\cf2 [is.na(\cf0 z\cf2 )]\cf0  \cf2 <-\cf0  max.z \cf2 *\cf0  \cf4 10000\cf0 \
+    z \cf2 <-\cf0  \cf2 matrix(\cf0 z\cf2 ,\cf0  n.grid\cf2 ,\cf0  n.grid\cf2 )\cf0 \
+    surf.col \cf2 <-\cf0  \cf2 t(\cf0 av\cf2 )\cf0  \cf2 %*%\cf0  z \cf2 %*%\cf0  av\
+    surf.col\cf2 [\cf0 surf.col \cf2 >\cf0  max.z \cf2 *\cf0  \cf4 2\cf2 ]\cf0  \cf2 <-\cf0  \cf3 NA\cf0 \
+    \cf3 if\cf0  \cf2 (!is.null(\cf0 zlim\cf2 ))\cf0  \cf2 \{\cf0 \
+      \cf3 if\cf0  \cf2 (length(\cf0 zlim\cf2 )\cf0  \cf2 !=\cf0  \cf4 2\cf0  \cf2 ||\cf0  zlim\cf2 [\cf4 1\cf2 ]\cf0  \cf2 >=\cf0  zlim\cf2 [\cf4 2\cf2 ])\cf0  \
+        \cf2 stop(\cf5 "Something wrong with zlim"\cf2 )\cf0 \
+      min.z \cf2 <-\cf0  zlim\cf2 [\cf4 1\cf2 ]\cf0 \
+      max.z \cf2 <-\cf0  zlim\cf2 [\cf4 2\cf2 ]\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 else\cf0  \cf2 \{\cf0 \
+      min.z \cf2 <-\cf0  \cf2 min(\cf0 fv\cf2 $\cf0 fit\cf2 ,\cf0  na.rm \cf2 =\cf0  \cf3 TRUE\cf2 )\cf0 \
+      max.z \cf2 <-\cf0  \cf2 max(\cf0 fv\cf2 $\cf0 fit\cf2 ,\cf0  na.rm \cf2 =\cf0  \cf3 TRUE\cf2 )\cf0 \
+    \cf2 \}\cf0 \
+    surf.col \cf2 <-\cf0  surf.col \cf2 -\cf0  min.z\
+    surf.col \cf2 <-\cf0  surf.col\cf2 /(\cf0 max.z \cf2 -\cf0  min.z\cf2 )\cf0 \
+    surf.col \cf2 <-\cf0  \cf2 round(\cf0 surf.col \cf2 *\cf0  nCol\cf2 )\cf0 \
+    con.col \cf2 <-\cf0  \cf4 1\cf0 \
+    \cf3 if\cf0  \cf2 (\cf0 color \cf2 ==\cf0  \cf5 "heat"\cf2 )\cf0  \cf2 \{\cf0 \
+      pal \cf2 <-\cf0  \cf2 heat.colors(\cf0 nCol\cf2 )\cf0 \
+      con.col \cf2 <-\cf0  \cf4 3\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 else\cf0  \cf3 if\cf0  \cf2 (\cf0 color \cf2 ==\cf0  \cf5 "topo"\cf2 )\cf0  \cf2 \{\cf0 \
+      pal \cf2 <-\cf0  \cf2 topo.colors(\cf0 nCol\cf2 )\cf0 \
+      con.col \cf2 <-\cf0  \cf4 2\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 else\cf0  \cf3 if\cf0  \cf2 (\cf0 color \cf2 ==\cf5 "rg"\cf2 )\{\cf0 \
+      pal\cf2 <-rainbow(\cf0 nCol\cf2 ,\cf0  s \cf2 =\cf0  \cf4 1\cf2 ,\cf0  v \cf2 =\cf0  \cf4 1\cf2 ,\cf0  start \cf2 =\cf0  \cf4 0\cf2 ,\cf0  end \cf2 =\cf0  \cf4 1/3\cf2 ,\cf0  alpha \cf2 =\cf0  \cf4 1\cf2 )[nCol:1]\cf0 \
+      con.col \cf2 <-\cf4 1\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 else\cf0  \cf3 if\cf0  \cf2 (\cf0 color \cf2 ==\cf0  \cf5 "cm"\cf2 )\cf0  \cf2 \{\cf0 \
+      pal \cf2 <-\cf0  \cf2 cm.colors(\cf0 nCol\cf2 )\cf0 \
+      con.col \cf2 <-\cf0  \cf4 1\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 else\cf0  \cf3 if\cf0  \cf2 (\cf0 color \cf2 ==\cf0  \cf5 "terrain"\cf2 )\cf0  \cf2 \{\cf0 \
+      pal \cf2 <-\cf0  \cf2 terrain.colors(\cf0 nCol\cf2 )\cf0 \
+      con.col \cf2 <-\cf0  \cf4 2\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 else\cf0  \cf3 if\cf0  \cf2 (\cf0 color \cf2 ==\cf0  \cf5 "gray"\cf0  \cf2 ||\cf0  color \cf2 ==\cf0  \cf5 "bw"\cf2 )\cf0  \cf2 \{\cf0 \
+      pal \cf2 <-\cf0  \cf2 gray(seq(\cf4 0.1\cf2 ,\cf0  \cf4 0.9\cf2 ,\cf0  length \cf2 =\cf0  nCol\cf2 ))\cf0 \
+      con.col \cf2 <-\cf0  \cf4 1\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 else\cf0  \cf2 stop(\cf5 "color scheme not recognised"\cf2 )\cf0 \
+    \cf3 if\cf0  \cf2 (is.null(\cf0 contour.col\cf2 ))\cf0  \
+      contour.col \cf2 <-\cf0  con.col\
+    surf.col\cf2 [\cf0 surf.col \cf2 <\cf0  \cf4 1\cf2 ]\cf0  \cf2 <-\cf0  \cf4 1\cf0 \
+    surf.col\cf2 [\cf0 surf.col \cf2 >\cf0  nCol\cf2 ]\cf0  \cf2 <-\cf0  nCol\
+    \cf3 if\cf0  \cf2 (is.na(\cf0 col\cf2 ))\cf0  \
+      col \cf2 <-\cf0  pal\cf2 [as.array(\cf0 surf.col\cf2 )]\cf0 \
+    z \cf2 <-\cf0  \cf2 matrix(\cf0 fv\cf2 $\cf0 fit\cf2 ,\cf0  n.grid\cf2 ,\cf0  n.grid\cf2 )\cf0 \
+    \cf3 if\cf0  \cf2 (\cf0 plot.type \cf2 ==\cf0  \cf5 "contour"\cf2 )\cf0  \cf2 \{\cf0 \
+      stub \cf2 <-\cf0  \cf2 paste(ifelse(\cf5 "xlab"\cf0  \cf2 %\cf3 in\cf2 %\cf0  dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",xlab=view[1]"\cf2 ),\cf0  \
+                    \cf2 ifelse(\cf5 "ylab"\cf0  \cf2 %\cf3 in\cf2 %\cf0  dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",ylab=view[2]"\cf2 ),\cf0  \
+                    \cf2 ifelse(\cf5 "main"\cf0  \cf2 %\cf3 in\cf2 %\cf0  dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",main=zlab"\cf2 ),\cf0  \cf5 ",...)"\cf2 ,\cf0  \
+                    sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+      \cf3 if\cf0  \cf2 (\cf0 color \cf2 !=\cf0  \cf5 "bw"\cf2 )\cf0  \cf2 \{\cf0 \
+        txt \cf2 <-\cf0  \cf2 paste(\cf5 "image(m1,m2,z,col=pal,zlim=c(min.z,max.z)"\cf2 ,\cf0  \
+                     stub\cf2 ,\cf0  sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+        \cf2 eval(parse(\cf0 text \cf2 =\cf0  txt\cf2 ))\cf0 \
+        txt \cf2 <-\cf0  \cf2 paste(\cf5 "contour(m1,m2,z,col=contour.col,zlim=c(min.z,max.z)"\cf2 ,\cf0  \
+                     \cf2 ifelse(\cf5 "add"\cf0  \cf2 %\cf3 in\cf2 %\cf0  dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",add=TRUE"\cf2 ),\cf0  \cf5 ",...)"\cf2 ,\cf0  \
+                     sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+        \cf2 eval(parse(\cf0 text \cf2 =\cf0  txt\cf2 ))\cf0 \
+      \cf2 \}\cf0 \
+      \cf3 else\cf0  \cf2 \{\cf0 \
+        txt \cf2 <-\cf0  \cf2 paste(\cf5 "contour(m1,m2,z,col=1,zlim=c(min.z,max.z)"\cf2 ,\cf0  \
+                     stub\cf2 ,\cf0  sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+        \cf2 eval(parse(\cf0 text \cf2 =\cf0  txt\cf2 ))\cf0 \
+      \cf2 \}\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 else\cf0  \cf2 \{\cf0 \
+      stub \cf2 <-\cf0  \cf2 paste(ifelse(\cf5 "xlab"\cf0  \cf2 %\cf3 in\cf2 %\cf0  dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",xlab=view[1]"\cf2 ),\cf0  \
+                    \cf2 ifelse(\cf5 "ylab"\cf0  \cf2 %\cf3 in\cf2 %\cf0  dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",ylab=view[2]"\cf2 ),\cf0  \
+                    \cf2 ifelse(\cf5 "zlab"\cf0  \cf2 %\cf3 in\cf2 %\cf0  dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",zlab=zlab"\cf2 ),\cf0  \cf5 ",...)"\cf2 ,\cf0  \
+                    sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+      \cf3 if\cf0  \cf2 (\cf0 color \cf2 ==\cf0  \cf5 "bw"\cf2 )\cf0  \cf2 \{\cf0 \
+        op \cf2 <-\cf0  \cf2 par(\cf0 bg \cf2 =\cf0  \cf5 "white"\cf2 )\cf0 \
+        txt \cf2 <-\cf0  \cf2 paste(\cf5 "persp(m1,m2,z,col=\\"white\\",zlim=c(min.z,max.z) "\cf2 ,\cf0  \
+                     stub\cf2 ,\cf0  sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+        \cf2 eval(parse(\cf0 text \cf2 =\cf0  txt\cf2 ))\cf0 \
+        \cf2 par(\cf0 op\cf2 )\cf0 \
+      \cf2 \}\cf0 \
+      \cf3 else\cf0  \cf2 \{\cf0 \
+        txt \cf2 <-\cf0  \cf2 paste(\cf5 "persp(m1,m2,z,col=col,zlim=c(min.z,max.z)"\cf2 ,\cf0  \
+                     stub\cf2 ,\cf0  sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+        \cf2 eval(parse(\cf0 text \cf2 =\cf0  txt\cf2 ))\cf0 \
+      \cf2 \}\cf0 \
+    \cf2 \}\cf0 \
+  \cf2 \}\cf0 \
+  \cf3 else\cf0  \cf2 \{\cf0 \
+    \cf3 if\cf0  \cf2 (\cf0 color \cf2 ==\cf0  \cf5 "bw"\cf0  \cf2 ||\cf0  color \cf2 ==\cf0  \cf5 "gray"\cf2 )\cf0  \cf2 \{\cf0 \
+      subs \cf2 <-\cf0  \cf2 paste(\cf5 "grey are +/-"\cf2 ,\cf0  se\cf2 ,\cf0  \cf5 "s.e."\cf2 )\cf0 \
+      lo.col \cf2 <-\cf0  \cf5 "gray"\cf0 \
+      hi.col \cf2 <-\cf0  \cf5 "gray"\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 else\cf0  \cf2 \{\cf0 \
+      subs \cf2 <-\cf0  \cf2 paste(\cf5 "red/green are +/-"\cf2 ,\cf0  se\cf2 ,\cf0  \cf5 "s.e."\cf2 )\cf0 \
+      lo.col \cf2 <-\cf0  \cf5 "green"\cf0 \
+      hi.col \cf2 <-\cf0  \cf5 "red"\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 if\cf0  \cf2 (!is.null(\cf0 zlim\cf2 ))\cf0  \cf2 \{\cf0 \
+      \cf3 if\cf0  \cf2 (length(\cf0 zlim\cf2 )\cf0  \cf2 !=\cf0  \cf4 2\cf0  \cf2 ||\cf0  zlim\cf2 [\cf4 1\cf2 ]\cf0  \cf2 >=\cf0  zlim\cf2 [\cf4 2\cf2 ])\cf0  \
+        \cf2 stop(\cf5 "Something wrong with zlim"\cf2 )\cf0 \
+      min.z \cf2 <-\cf0  zlim\cf2 [\cf4 1\cf2 ]\cf0 \
+      max.z \cf2 <-\cf0  zlim\cf2 [\cf4 2\cf2 ]\cf0 \
+    \cf2 \}\cf0 \
+    \cf3 else\cf0  \cf2 \{\cf0 \
+      z.max \cf2 <-\cf0  \cf2 max(\cf0 fv\cf2 $\cf0 fit \cf2 +\cf0  fv\cf2 $\cf0 se.fit \cf2 *\cf0  se\cf2 ,\cf0  na.rm \cf2 =\cf0  \cf3 TRUE\cf2 )\cf0 \
+      z.min \cf2 <-\cf0  \cf2 min(\cf0 fv\cf2 $\cf0 fit \cf2 -\cf0  fv\cf2 $\cf0 se.fit \cf2 *\cf0  se\cf2 ,\cf0  na.rm \cf2 =\cf0  \cf3 TRUE\cf2 )\cf0 \
+    \cf2 \}\cf0 \
+    zlim \cf2 <-\cf0  \cf2 c(\cf0 z.min\cf2 ,\cf0  z.max\cf2 )\cf0 \
+    z \cf2 <-\cf0  fv\cf2 $\cf0 fit \cf2 -\cf0  fv\cf2 $\cf0 se.fit \cf2 *\cf0  se\
+    z \cf2 <-\cf0  \cf2 matrix(\cf0 z\cf2 ,\cf0  n.grid\cf2 ,\cf0  n.grid\cf2 )\cf0 \
+    \cf3 if\cf0  \cf2 (\cf0 plot.type \cf2 ==\cf0  \cf5 "contour"\cf2 )\cf0  \
+      \cf2 warning(\cf5 "sorry no option for contouring with errors: try plot.gam"\cf2 )\cf0 \
+    stub \cf2 <-\cf0  \cf2 paste(ifelse(\cf5 "xlab"\cf0  \cf2 %\cf3 in\cf2 %\cf0  dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",xlab=view[1]"\cf2 ),\cf0  \
+                  \cf2 ifelse(\cf5 "ylab"\cf0  \cf2 %\cf3 in\cf2 %\cf0  dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",ylab=view[2]"\cf2 ),\cf0  \cf2 ifelse(\cf5 "zlab"\cf0  \cf2 %\cf3 in\cf2 %\cf0  \
+                                                                         dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",zlab=zlab"\cf2 ),\cf0  \cf2 ifelse(\cf5 "sub"\cf0  \cf2 %\cf3 in\cf2 %\cf0  dnm\cf2 ,\cf0  \
+                                                                                                        \cf5 ""\cf2 ,\cf0  \cf5 ",sub=subs"\cf2 ),\cf0  \cf5 ",...)"\cf2 ,\cf0  sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+    txt \cf2 <-\cf0  \cf2 paste(\cf5 "persp(m1,m2,z,col=col,zlim=zlim"\cf2 ,\cf0  \cf2 ifelse(\cf5 "border"\cf0  \cf2 %\cf3 in\cf2 %\cf0  \
+                                                             dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",border=lo.col"\cf2 ),\cf0  stub\cf2 ,\cf0  sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+    \cf2 eval(parse(\cf0 text \cf2 =\cf0  txt\cf2 ))\cf0 \
+    \cf2 par(\cf0 new \cf2 =\cf0  \cf3 TRUE\cf2 )\cf0 \
+    z \cf2 <-\cf0  fv\cf2 $\cf0 fit\
+    z \cf2 <-\cf0  \cf2 matrix(\cf0 z\cf2 ,\cf0  n.grid\cf2 ,\cf0  n.grid\cf2 )\cf0 \
+    txt \cf2 <-\cf0  \cf2 paste(\cf5 "persp(m1,m2,z,col=col,zlim=zlim"\cf2 ,\cf0  \cf2 ifelse(\cf5 "border"\cf0  \cf2 %\cf3 in\cf2 %\cf0  \
+                                                             dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",border=\\"black\\""\cf2 ),\cf0  stub\cf2 ,\cf0  sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+    \cf2 eval(parse(\cf0 text \cf2 =\cf0  txt\cf2 ))\cf0 \
+    \cf2 par(\cf0 new \cf2 =\cf0  \cf3 TRUE\cf2 )\cf0 \
+    z \cf2 <-\cf0  fv\cf2 $\cf0 fit \cf2 +\cf0  se \cf2 *\cf0  fv\cf2 $\cf0 se.fit\
+    z \cf2 <-\cf0  \cf2 matrix(\cf0 z\cf2 ,\cf0  n.grid\cf2 ,\cf0  n.grid\cf2 )\cf0 \
+    txt \cf2 <-\cf0  \cf2 paste(\cf5 "persp(m1,m2,z,col=col,zlim=zlim"\cf2 ,\cf0  \cf2 ifelse(\cf5 "border"\cf0  \cf2 %\cf3 in\cf2 %\cf0  \
+                                                             dnm\cf2 ,\cf0  \cf5 ""\cf2 ,\cf0  \cf5 ",border=hi.col"\cf2 ),\cf0  stub\cf2 ,\cf0  sep \cf2 =\cf0  \cf5 ""\cf2 )\cf0 \
+    \cf2 eval(parse(\cf0 text \cf2 =\cf0  txt\cf2 ))\cf0 \
+  \cf2 \}\
+\
+\cf0 #return range and paletted to make a legend\
+lower.z <- min(z, na.rm = T)\
+upper.z <- max(z, na.rm = T)\
+#return(c(lower.z,upper.z, pal))\
+if(legend)\{\
+legend(legend.loc,legend = signif(seq(as.numeric(lower.z),as.numeric(upper.z),length.out = 5),2),fill = pal[seq(1,length(pal),length.out = 5)], bg = "white")\
+\}\
+\
+\cf2 \}}
